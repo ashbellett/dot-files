@@ -1,9 +1,6 @@
 # ~/.xinitrc
 # Ash Bellett
 
-# Define resolution:
-xrandr --output Virtual1 --mode 1360x768
-
 # Load X settings:
 xrdb -merge ~/.Xresources
 

@@ -3,13 +3,10 @@
 
 # Variables:
 
-# Set hostname:
-export HOSTNAME='Ash'
 # Default applications:
 export SHELL='/bin/zsh'
-#export TERM='/bin/urxvt'
 export EDITOR='/bin/vim'
-#export BROWSER='/bin/firefox'
+export BROWSER='/bin/chromium-browser'
 
 # Sound:
 
