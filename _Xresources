@@ -46,27 +46,28 @@
 
 ! Terminal:
 
-URxvt.font:	        	xft:Source Code Pro:size=10.5:style=Medium
-URxvt.boldfont:	    	xft:Source Code Pro:size=10.5:style=Bold
-URxvt.letterSpace:  	0
-URxvt.background:   	black
-URxvt.foreground:   	white
-URxvt.cursorBlink:  	true
-URxvt.cursorUnderline:	true
-URxvt.scrollBar:    	false
-URxvt.internalBorder:	16
+URxvt.font:             xft:Source Code Pro:size=10.5:style=Medium
+URxvt.boldfont:         xft:Source Code Pro:size=10.5:style=Bold
+URxvt.letterSpace:      0
+URxvt.background:       black
+URxvt.foreground:       white
+URxvt.cursorBlink:      true
+URxvt.cursorUnderline:  true
+URxvt.scrollBar:        false
+URxvt.internalBorder:   16
 
 ! Xft:
 
-Xft.dpi:    	96
-Xft.antialias:	true
-Xft.rgba:   	rgb
-Xft.hinting:	true
-Xft.autohint:	true
-Xft.hintstyle:	hintfull
-Xft.lcdfilter:	lcddefault
+Xft.dpi:        96
+Xft.antialias:  true
+Xft.rgba:       rgb
+Xft.hinting:    true
+Xft.autohint:   true
+Xft.hintstyle:  hintfull
+Xft.lcdfilter:  lcddefault
 
 ! Transparency:
-!urxvt*inheritPixmap:	true
-!urxvt*transparent: 	true
-!urxvt*shading:	    	10
+
+!urxvt*inheritPixmap:   true
+!urxvt*transparent:     true
+!urxvt*shading:         10
