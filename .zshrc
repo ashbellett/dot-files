@@ -3,10 +3,7 @@
 
 # Variables:
 
-# Default applications:
-export SHELL='/bin/zsh'
-export EDITOR='/bin/vim'
-export BROWSER='/bin/chromium-browser'
+export PATH=$PATH:/home/ash/.local/bin
 
 # Sound:
 
