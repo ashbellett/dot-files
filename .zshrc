@@ -1,23 +1,14 @@
 # ~/.zshrc
 # Ash Bellett
 
-# Variables:
-
-export PATH=$PATH:/home/ash/.local/bin
-
-# Sound:
-
-# No sound:
-setopt NO_BEEP
-
 # History:
 
 # Location of history file:
-HISTFILE=~/.zhist
+HISTFILE=~/.zhistory
 # Number of commands saved per session:
-HISTSIZE=128
+HISTSIZE=1024
 # Number of commands saved overall:
-SAVEHIST=128
+SAVEHIST=1024
 # Save timestamp and execution duration:
 setopt EXTENDED_HISTORY
 # Ignore duplicate commands:
@@ -27,18 +18,18 @@ setopt HIST_IGNORE_DUPS
 
 # Load completion:
 autoload -Uz compinit
-# Start completion:
-compinit
 # Set completion style:
 zstyle ':completion:*' menu select
+# Start completion:
+compinit
 
 # Prompt:
 
 # Load prompt:
 autoload -Uz promptinit
-# Start prompt:
-promptinit
 # Define left prompt:
 PROMPT='%B%n%b: ' # boldface username
 # Define right prompt:
 RPROMPT='%/' # current directory
+# Start prompt:
+promptinit

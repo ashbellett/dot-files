@@ -46,15 +46,15 @@
 
 ! Terminal:
 
-URxvt.font:             xft:Source Code Pro:size=10.5:style=Medium
-URxvt.boldfont:         xft:Source Code Pro:size=10.5:style=Bold
-URxvt.letterSpace:      0
-URxvt.background:       black
-URxvt.foreground:       white
-URxvt.cursorBlink:      true
-URxvt.cursorUnderline:  true
-URxvt.scrollBar:        false
-URxvt.internalBorder:   16
+!URxvt.font:             xft:Source Code Pro:size=10.5:style=Medium
+!URxvt.boldfont:         xft:Source Code Pro:size=10.5:style=Bold
+!URxvt.letterSpace:      0
+!URxvt.background:       black
+!URxvt.foreground:       white
+!URxvt.cursorBlink:      true
+!URxvt.cursorUnderline:  true
+!URxvt.scrollBar:        false
+!URxvt.internalBorder:   16
 
 ! Xft:
 
