@@ -24,6 +24,8 @@ autoload -Uz compinit
 zstyle ':completion:*' menu select
 # Start completion:
 compinit
+# Auto-complete aliases
+setopt COMPLETE_ALIASES
 
 # Prompt:
 
@@ -35,3 +37,5 @@ PROMPT='%B%n%b: ' # boldface username
 RPROMPT='%/' # current directory
 # Start prompt:
 promptinit
+# Add Gentoo completions
+prompt gentoo
