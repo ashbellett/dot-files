@@ -1,4 +1,4 @@
-" ~/.vimrc
+" ~/.config/nvim/init.vim
 " Ash Bellett
 
 " Visuals:
@@ -8,7 +8,6 @@ set ruler
 " Features:
 syntax on
 set magic
-set nocompatible
 filetype plugin on
 filetype indent on
 
@@ -32,3 +31,7 @@ set incsearch
 set ignorecase
 set smartcase
 set hlsearch
+
+" Hide tildes:
+highlight EndOfBuffer ctermfg=0 ctermbg=0
+

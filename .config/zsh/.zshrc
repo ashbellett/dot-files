@@ -1,10 +1,12 @@
+#! /bin/zsh
+
 # ~/.zshrc
 # Ash Bellett
 
 # History:
 
 # Location of history file:
-HISTFILE=~/.zhistory
+HISTFILE=~/.cache/zsh/zhistory
 # Number of commands saved per session:
 HISTSIZE=1024
 # Number of commands saved overall:
