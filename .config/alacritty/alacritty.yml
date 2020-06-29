@@ -3,9 +3,8 @@
 
 window:
     padding:
-        x: 16
-        y: 16
-    dynamic_padding: true
+        x: 24
+        y: 24
 
 font:
     normal:
@@ -18,11 +17,19 @@ colors:
         foreground: '#8F93A2'
     normal:
         black: '#0F111A'
-        red: '#F07178'
-        green: '#80CBC4'
-        yellow: '#FFCB6B'
+        red: '#FF5370'
+        green: '#99C794'
+        yellow: '#C4E88D'
         blue: '#82AAFF'
         magenta: '#C792EA'
         cyan: '#89DDFF'
-        white: '#FFFFFF'
-
+        white: '#D8DEE9'
+    bright:
+        black: '#0F111A'
+        red: '#FF5370'
+        green: '#99C794'
+        yellow: '#C4E88D'
+        blue: '#82AAFF'
+        magenta: '#C792EA'
+        cyan: '#89DDFF'
+        white: '#D8DEE9'
