@@ -1,9 +1,9 @@
 # Dot Files
 A collection of my personal dot files used in Linux.
 ## Usage
-Move all files and folders to the $HOME directory.
+Copy all files and folders to the $HOME directory.
 ```sh
-mv ./{.,}* ~/
+cp -r ./{.,}* ~/
 ```
 ## Current System
 - **OS:** Gentoo
