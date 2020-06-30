@@ -23,7 +23,7 @@ colors:
         blue: '#82AAFF'
         magenta: '#C792EA'
         cyan: '#89DDFF'
-        white: '#D8DEE9'
+        white: '#464b5d'
     bright:
         black: '#0F111A'
         red: '#FF5370'
