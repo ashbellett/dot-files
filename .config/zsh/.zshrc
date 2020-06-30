@@ -6,7 +6,7 @@
 # History:
 
 # Location of history file:
-HISTFILE=~/.cache/zsh/zhistory
+HISTFILE=~/.cache/zsh/history
 # Number of commands saved per session:
 HISTSIZE=1024
 # Number of commands saved overall:
