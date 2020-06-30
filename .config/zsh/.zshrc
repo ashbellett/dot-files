@@ -16,14 +16,14 @@ setopt EXTENDED_HISTORY
 # Ignore duplicate commands:
 setopt HIST_IGNORE_DUPS
 
-# Completion:
+# Completions:
 
-# Load completion:
+# Load completions:
 autoload -Uz compinit
+# Start completions:
+compinit
 # Set completion style:
 zstyle ':completion:*' menu select
-# Start completion:
-compinit
 # Auto-complete aliases:
 setopt COMPLETE_ALIASES
 
@@ -33,8 +33,6 @@ setopt COMPLETE_ALIASES
 autoload -Uz promptinit
 # Start prompt:
 promptinit
-# Add Gentoo completions:
-prompt gentoo
 # Define left prompt:
 PROMPT='%B%n%b: ' # boldface username
 # Define right prompt:
