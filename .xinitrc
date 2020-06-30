@@ -1,3 +1,8 @@
+#! /bin/zsh
+
+# ~/.xinitrc
+# Ash Bellett
+
 # Set clock in root window name
 while true; do
     xsetroot -name "$(date +"%H:%M %A %d %B %Y")"
