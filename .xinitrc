@@ -10,7 +10,8 @@ while true; do
 done &
 
 # Set wallpaper
-xwallpaper --zoom ~/.local/share/wallpaper/wallpaper.png &
+# xwallpaper --zoom ~/.local/share/wallpaper/wallpaper.png &
+xsetroot -solid #0F111A
 
 # Start dwm window manager
 ssh-agent dwm
