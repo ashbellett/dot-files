@@ -3,7 +3,9 @@
     "editor.cursorStyle": "line",
     "editor.fontFamily": "Fira Code",
     "editor.fontLigatures": true,
+    "editor.fontWeight": "400",
     "editor.insertSpaces": true,
+    "editor.minimap.enabled": false,
     "editor.tokenColorCustomizations":{
         "[Community Material Theme Ocean]": {
             "textMateRules": [
@@ -123,10 +125,12 @@
     "files.trimTrailingWhitespace": true,
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
+    "python.pythonPath": "C:\\Users\\Ash\\AppData\\Local\\Programs\\Python\\Python38\\python.exe",
     "terminal.integrated.shell.windows": "C:\\Program Files\\Powershell\\7\\pwsh.exe",
     "window.openFilesInNewWindow": "off",
     "window.openFoldersInNewWindow": "on",
+    "window.zoomLevel": 1,
     "workbench.colorTheme": "Community Material Theme Ocean",
     "workbench.editor.enablePreview": false,
-    "workbench.startupEditor": "newUntitledFile"
+    "workbench.startupEditor": "newUntitledFile",
 }
