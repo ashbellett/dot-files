@@ -131,5 +131,5 @@
     "window.zoomLevel": 1,
     "workbench.colorTheme": "Community Material Theme Ocean",
     "workbench.editor.enablePreview": false,
-    "workbench.startupEditor": "newUntitledFile",
+    "workbench.startupEditor": "none"
 }
