@@ -15,8 +15,8 @@ picks both up automatically.
 ## Install
 
 ```sh
-git clone https://github.com/ashbellett/dot-files.git ~/Code/dot-files
-cd ~/Code/dot-files
+git clone https://github.com/ashbellett/dot-files.git /tmp/dot-files
+cd /tmp/dot-files
 ./install.sh
 ```
 
