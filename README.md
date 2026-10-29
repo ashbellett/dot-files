@@ -9,7 +9,8 @@ for one tool, laid out to mirror `$HOME`: `zsh/.zshrc` installs to `~/.zshrc`,
 `ssh/.ssh/config` to `~/.ssh/config`, and so on.
 
 To add a file, put it in the package at the path it should have relative to
-`$HOME`. The installer picks it up automatically.
+`$HOME`. To add a package, create a new top-level directory. The installer
+picks both up automatically.
 
 ## Install
 
@@ -23,16 +24,17 @@ The installer:
 
 1. Symlinks every file in each package into `$HOME`. Existing files are moved
    to `~/.dotfiles-backup/<timestamp>/` first.
-2. Sets permissions on `~/.ssh`.
+2. If the `ssh` package is selected, makes `~/.ssh` private.
 3. If the `brew` package is selected, installs Homebrew if it's missing, then
    everything in the Brewfile (`brew bundle --global`).
 
 Re-running it is safe: files that are already linked are left alone.
 
+To install only some packages (for example, everything except `brew`), name
+them:
+
 ```sh
-./install.sh --dry-run      # preview changes
-./install.sh zsh git        # install only some packages
-./install.sh --no-brew      # skip Homebrew entirely
+./install.sh claude git ssh zsh
 ```
 
 ## Machine-specific settings
