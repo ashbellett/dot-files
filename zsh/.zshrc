@@ -1,7 +1,6 @@
 # ~/.zshrc
 
 # History:
-HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt EXTENDED_HISTORY
@@ -18,12 +17,12 @@ PROMPT='%B%n%b: ' # boldface username
 RPROMPT='%~'      # current directory
 
 # Homebrew:
-# Update Homebrew, upgrade everything installed, install anything in
-# ~/.Brewfile that's missing, then offer to uninstall anything not listed in
-# it, such as the old Python once Homebrew's default moves to a new version.
-# Finishes by removing old versions and every cached download.
+# Update Homebrew, install or upgrade everything in ~/.Brewfile, then offer to
+# uninstall anything not listed in it, such as the old Python once Homebrew's
+# default moves to a new version. Finishes by removing old versions, unused
+# dependencies and every cached download.
 brew-sync() {
-  brew update && brew upgrade && brew bundle --global || return
+  brew update && brew bundle --global || return
 
   local removals
   removals="$(brew bundle cleanup --global |
@@ -39,7 +38,6 @@ brew-sync() {
     fi
   fi
 
-  brew autoremove
   brew cleanup --prune=all
 }
 
