@@ -1,5 +1,4 @@
 # ~/.zshrc
-# Ash Bellett
 
 # History:
 HISTFILE=~/.zsh_history
@@ -19,11 +18,12 @@ PROMPT='%B%n%b: ' # boldface username
 RPROMPT='%~'      # current directory
 
 # Homebrew:
-# Install and upgrade everything in ~/.Brewfile, then offer to uninstall
-# anything not listed in it, such as the old Python once Homebrew's default
-# moves to a new version.
+# Update Homebrew, upgrade everything installed, install anything in
+# ~/.Brewfile that's missing, then offer to uninstall anything not listed in
+# it, such as the old Python once Homebrew's default moves to a new version.
+# Finishes by removing old versions and every cached download.
 brew-sync() {
-  brew update && brew bundle --global || return
+  brew update && brew upgrade && brew bundle --global || return
 
   local removals
   removals="$(brew bundle cleanup --global |
@@ -40,7 +40,12 @@ brew-sync() {
   fi
 
   brew autoremove
+  brew cleanup --prune=all
 }
+
+# Aliases:
+alias b=brew-sync
+alias python=python3
 
 # Machine-specific overrides (not tracked):
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
