@@ -1,6 +1,6 @@
 # Dot Files
 
-My personal dot files for macOS.
+My personal dot files for macOS (Apple Silicon) and Linux.
 
 ## Layout
 
@@ -26,7 +26,8 @@ The installer:
    to `~/.dotfiles-backup/<timestamp>/` first.
 2. If the `ssh` package is selected, makes `~/.ssh` private.
 3. If the `brew` package is selected, installs Homebrew if it's missing, then
-   everything in the Brewfile (`brew bundle --global`).
+   everything in the Brewfile (`brew bundle --global`). This package is
+   macOS-only: on Linux it's skipped, and naming it is an error.
 
 Re-running it is safe: files that are already linked are left alone.
 

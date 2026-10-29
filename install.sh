@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Install dotfiles on an Apple Silicon Mac.
+# Install dotfiles on an Apple Silicon Mac or on Linux.
 #
 # Each top-level directory (brew, git, ...) is a package that mirrors $HOME.
 # Every file in a package is symlinked to the same relative path under $HOME,
@@ -14,7 +14,8 @@
 # Usage: ./install.sh [package ...]
 #
 # With no packages given, all packages are installed. The brew package also
-# installs Homebrew if it's missing, then everything in the Brewfile.
+# installs Homebrew if it's missing, then everything in the Brewfile. It's
+# macOS-only, so on Linux it's skipped and system packages are left alone.
 
 set -euo pipefail
 
@@ -27,6 +28,10 @@ for dir in "$DOTFILES"/*/; do
   PACKAGES+=("$(basename "$dir")")
 done
 
+# Packages that only make sense on macOS.
+MACOS_ONLY=(brew)
+
+OS=
 selected=()
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
@@ -44,6 +49,17 @@ contains() {
   [[ " $* " == *" $item "* ]]
 }
 
+detect_os() {
+  case "$(uname -s)" in
+    Darwin)
+      [[ "$(uname -m)" == arm64 ]] || die "Only Apple Silicon Macs are supported"
+      OS=macos
+      ;;
+    Linux) OS=linux ;;
+    *)     die "Unsupported OS: $(uname -s)" ;;
+  esac
+}
+
 parse_args() {
   local arg
   for arg in "$@"; do
@@ -53,12 +69,20 @@ parse_args() {
       *)
         contains "$arg" "${PACKAGES[@]}" \
           || die "Unknown package: $arg (available: ${PACKAGES[*]})"
+        if [[ $OS != macos ]] && contains "$arg" "${MACOS_ONLY[@]}"; then
+          die "The $arg package is macOS-only"
+        fi
         selected+=("$arg")
         ;;
     esac
   done
   if [[ ${#selected[@]} -eq 0 ]]; then
-    selected=("${PACKAGES[@]}")
+    local package
+    for package in "${PACKAGES[@]}"; do
+      if [[ $OS == macos ]] || ! contains "$package" "${MACOS_ONLY[@]}"; then
+        selected+=("$package")
+      fi
+    done
   fi
 }
 
@@ -124,9 +148,8 @@ install_brew_packages() {
 }
 
 main() {
+  detect_os
   parse_args "$@"
-  [[ "$(uname -s)" == Darwin && "$(uname -m)" == arm64 ]] \
-    || die "This script only supports Apple Silicon Macs"
 
   local package
   for package in "${selected[@]}"; do
