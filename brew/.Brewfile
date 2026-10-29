@@ -1,5 +1,7 @@
 # ~/.Brewfile
-# Install with: brew bundle --global
+
+# Install with:
+# brew bundle --global
 
 # Formulae:
 # brew "gcc"

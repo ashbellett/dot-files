@@ -1,5 +1,4 @@
 # ~/.zprofile
-# Ash Bellett
 
 # Homebrew (Apple Silicon or Intel):
 if [[ -x /opt/homebrew/bin/brew ]]; then

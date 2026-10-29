@@ -1,11 +1,5 @@
 # ~/.gitconfig
-# Ash Bellett
 
-# ~/.gitconfig is a symlink into the dotfiles repo, so `git config --global`
-# writes here. Put identity, credentials and other machine-specific settings in
-# ~/.gitconfig.local instead (included below), e.g.
-#   git config --file ~/.gitconfig.local user.name "Your Name"
-#   git config --file ~/.gitconfig.local user.email "you@example.com"
 [init]
 	defaultBranch = main
 [pull]
