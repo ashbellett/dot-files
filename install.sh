@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Install dotfiles on macOS.
+# Install dotfiles on an Apple Silicon Mac.
 #
 # Each top-level package directory (brew, git, ...) mirrors $HOME. Every file
 # in a package is symlinked to the same relative path under $HOME, so
@@ -25,6 +25,7 @@ set -euo pipefail
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGES=(brew claude git ssh zsh)
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
+BREW=/opt/homebrew/bin/brew
 
 dry_run=false
 with_brew=true
@@ -124,7 +125,6 @@ link_package() {
 # ssh ignores config files that are writable by others.
 fix_ssh_permissions() {
   info "Setting ~/.ssh permissions"
-  run mkdir -p "$HOME/.ssh"
   run chmod 700 "$HOME/.ssh"
   run chmod 600 "$DOTFILES/ssh/.ssh/config"
   if [[ -f "$HOME/.ssh/config.local" ]]; then
@@ -132,37 +132,26 @@ fix_ssh_permissions() {
   fi
 }
 
-# Put Homebrew on PATH for the rest of this script, if it's installed.
-load_brew() {
-  local prefix
-  for prefix in /opt/homebrew /usr/local; do
-    if [[ -x "$prefix/bin/brew" ]]; then
-      eval "$("$prefix/bin/brew" shellenv)"
-      return 0
-    fi
-  done
-  return 1
-}
-
 # Install Homebrew if missing, then everything in ~/.Brewfile.
 install_brew_packages() {
-  if load_brew; then
-    info "Homebrew found at $(command -v brew)"
+  if [[ -x "$BREW" ]]; then
+    info "Homebrew found at $BREW"
   elif $dry_run; then
     info "Would install Homebrew from https://brew.sh"
   else
     info "Installing Homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    load_brew || die "Homebrew installed but brew is not on PATH"
+    [[ -x "$BREW" ]] || die "Homebrew install finished but $BREW is missing"
   fi
 
   info "Installing Brewfile packages"
-  run brew bundle --global
+  run "$BREW" bundle --global
 }
 
 main() {
   parse_args "$@"
-  [[ "$(uname -s)" == "Darwin" ]] || die "This script only supports macOS"
+  [[ "$(uname -s)" == Darwin && "$(uname -m)" == arm64 ]] \
+    || die "This script only supports Apple Silicon Macs"
   $dry_run && info "Dry run: nothing will be changed"
 
   local package
