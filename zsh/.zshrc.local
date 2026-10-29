@@ -1,0 +1,6 @@
+# ~/.zshrc.local
+
+# Machine-specific zsh settings, sourced at the end of ~/.zshrc.
+# install.sh copies this template once; edits here stay on this machine.
+
+# export WORK_DIR=~/Code/work

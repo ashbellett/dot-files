@@ -37,8 +37,12 @@ Re-running it is safe: files that are already linked are left alone.
 
 ## Machine-specific settings
 
-These files are sourced if they exist but are not tracked:
+Each config loads a `.local` file for settings that differ between machines:
 
 - `~/.zshrc.local`
 - `~/.gitconfig.local` (put your `[user]` name and email here)
 - `~/.ssh/config.local`
+
+The installer creates these from the templates in each package the first time
+it runs, and never overwrites them afterwards. They're plain copies, not
+symlinks, so edits stay on that machine and out of the repo.

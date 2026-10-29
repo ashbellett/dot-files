@@ -7,6 +7,10 @@
 # zsh/.zshrc -> ~/.zshrc and ssh/.ssh/config -> ~/.ssh/config. Existing files
 # are moved to ~/.dotfiles-backup/<timestamp>/ before being replaced.
 #
+# Files ending in .local (e.g. ~/.gitconfig.local) are templates for
+# machine-specific settings. They're copied into place only if missing, and
+# never linked or overwritten, so local edits stay out of the repo.
+#
 # Usage: ./install.sh [options] [package ...]
 #
 # Options:
@@ -36,7 +40,8 @@ run() {
 }
 
 usage() {
-  sed -n '3,17s/^# \{0,1\}//p' "${BASH_SOURCE[0]}"
+  # Print the header comment, from line 3 up to the first blank line.
+  sed -n '3,/^$/s/^# \{0,1\}//p' "${BASH_SOURCE[0]}"
 }
 
 is_package() {
@@ -88,12 +93,31 @@ link_file() {
   run ln -s "$src" "$dest"
 }
 
+# Copy a .local template to $HOME/<path>, unless something is already there.
+copy_template() {
+  local src="$1" rel="$2"
+  local dest="$HOME/$rel"
+
+  if [[ -e "$dest" || -L "$dest" ]]; then
+    printf '    exists   ~/%s\n' "$rel"
+    return
+  fi
+
+  printf '    create   ~/%s\n' "$rel"
+  run mkdir -p "$(dirname "$dest")"
+  run cp "$src" "$dest"
+}
+
 link_package() {
   local package="$1" src rel
   info "Linking $package"
   while IFS= read -r -d '' src; do
     rel="${src#"$DOTFILES/$package/"}"
-    link_file "$src" "$rel"
+    if [[ "$rel" == *.local ]]; then
+      copy_template "$src" "$rel"
+    else
+      link_file "$src" "$rel"
+    fi
   done < <(find "$DOTFILES/$package" \( -type f -o -type l \) ! -name .DS_Store -print0 | sort -z)
 }
 
@@ -103,6 +127,9 @@ fix_ssh_permissions() {
   run mkdir -p "$HOME/.ssh"
   run chmod 700 "$HOME/.ssh"
   run chmod 600 "$DOTFILES/ssh/.ssh/config"
+  if [[ -f "$HOME/.ssh/config.local" ]]; then
+    run chmod 600 "$HOME/.ssh/config.local"
+  fi
 }
 
 # Put Homebrew on PATH for the rest of this script, if it's installed.

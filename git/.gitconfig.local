@@ -1,0 +1,8 @@
+# ~/.gitconfig.local
+
+# Machine-specific git settings, included from ~/.gitconfig.
+# install.sh copies this template once; edits here stay on this machine.
+
+# [user]
+# 	name = Your Name
+# 	email = you@example.com
