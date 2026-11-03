@@ -8,10 +8,6 @@
 	autoSetupRemote = true
 [alias]
 	c = commit -am
-	p = push
-	pl = pull
-	m = merge
 	f = fetch origin
-	s = switch
 [include]
 	path = ~/.gitconfig.local
