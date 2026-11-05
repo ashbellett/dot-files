@@ -11,27 +11,31 @@
 # machine-specific settings. They're copied into place only if missing, and
 # never linked or overwritten, so local edits stay out of the repo.
 #
-# Usage: ./install.sh [package ...]
+# Usage: ./install.sh [target ...]
 #
-# With no packages given, all packages are installed. The brew package also
-# installs Homebrew if it's missing, then everything in the Brewfile. It's
-# macOS-only, so on Linux it's skipped and system packages are left alone.
+# A target is a package or "toolchains". With none given, everything is
+# installed. The brew package also installs Homebrew if it's missing, then
+# everything in the Brewfile. It's macOS-only, so on Linux it's skipped and
+# system packages are left alone. The toolchains target installs or updates
+# rustup, uv, fnm and rbenv, and the latest Rust, Python, Node and Ruby.
+#
+# OS-specific steps live in install-macos.sh and install-linux.sh.
 
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
-BREW=/opt/homebrew/bin/brew
+
+LOCAL_BIN="$HOME/.local/bin"    # uv and fnm
+CARGO_BIN="$HOME/.cargo/bin"    # rustup
+RBENV_ROOT="$HOME/.rbenv"
 
 PACKAGES=()
 for dir in "$DOTFILES"/*/; do
   PACKAGES+=("$(basename "$dir")")
 done
+TARGETS=("${PACKAGES[@]}" toolchains)
 
-# Packages that only make sense on macOS.
-MACOS_ONLY=(brew)
-
-OS=
 selected=()
 
 info() { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
@@ -49,15 +53,18 @@ contains() {
   [[ " $* " == *" $item "* ]]
 }
 
-detect_os() {
+# Source the OS script, which defines os_check, package_supported, os_install
+# and os_check_toolchain_deps.
+load_os() {
+  local os
   case "$(uname -s)" in
-    Darwin)
-      [[ "$(uname -m)" == arm64 ]] || die "Only Apple Silicon Macs are supported"
-      OS=macos
-      ;;
-    Linux) OS=linux ;;
-    *)     die "Unsupported OS: $(uname -s)" ;;
+    Darwin) os=macos ;;
+    Linux)  os=linux ;;
+    *)      die "Unsupported OS: $(uname -s)" ;;
   esac
+  # shellcheck source=/dev/null
+  source "$DOTFILES/install-$os.sh"
+  os_check
 }
 
 parse_args() {
@@ -67,20 +74,18 @@ parse_args() {
       -h|--help) usage; exit 0 ;;
       -*)        die "Unknown option: $arg" ;;
       *)
-        contains "$arg" "${PACKAGES[@]}" \
-          || die "Unknown package: $arg (available: ${PACKAGES[*]})"
-        if [[ $OS != macos ]] && contains "$arg" "${MACOS_ONLY[@]}"; then
-          die "The $arg package is macOS-only"
-        fi
+        contains "$arg" "${TARGETS[@]}" \
+          || die "Unknown target: $arg (available: ${TARGETS[*]})"
+        package_supported "$arg" || die "The $arg package isn't supported on this OS"
         selected+=("$arg")
         ;;
     esac
   done
   if [[ ${#selected[@]} -eq 0 ]]; then
-    local package
-    for package in "${PACKAGES[@]}"; do
-      if [[ $OS == macos ]] || ! contains "$package" "${MACOS_ONLY[@]}"; then
-        selected+=("$package")
+    local target
+    for target in "${TARGETS[@]}"; do
+      if package_supported "$target"; then
+        selected+=("$target")
       fi
     done
   fi
@@ -135,25 +140,95 @@ link_package() {
   done < <(find "$DOTFILES/$package" \( -type f -o -type l \) ! -name .DS_Store -print0 | sort -z)
 }
 
-# Install Homebrew if missing, then everything in ~/.Brewfile.
-install_brew_packages() {
-  if [[ ! -x "$BREW" ]]; then
-    info "Installing Homebrew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    [[ -x "$BREW" ]] || die "Homebrew install finished but $BREW is missing"
+# Each installer below skips its shell setup, since ~/.zshrc already has it.
+
+install_rust() {
+  if command -v rustup >/dev/null; then
+    info "Updating Rust"
+    rustup update
+  else
+    info "Installing rustup and Rust"
+    curl --proto '=https' --tlsv1.2 -fsSL https://sh.rustup.rs \
+      | sh -s -- -y --no-modify-path
+  fi
+}
+
+install_python() {
+  if command -v uv >/dev/null; then
+    info "Updating uv"
+    uv self update
+  else
+    info "Installing uv"
+    curl -fsSL https://astral.sh/uv/install.sh \
+      | env UV_INSTALL_DIR="$LOCAL_BIN" UV_NO_MODIFY_PATH=1 sh
+  fi
+  # --default also links python and python3 into ~/.local/bin.
+  info "Installing the latest Python"
+  uv python install --default
+}
+
+install_node() {
+  if ! command -v fnm >/dev/null; then
+    info "Installing fnm"
+    # --force-install stops it deferring to Homebrew on macOS.
+    curl -fsSL https://fnm.vercel.app/install \
+      | bash -s -- --install-dir "$LOCAL_BIN" --skip-shell --force-install
   fi
 
-  info "Installing Brewfile packages"
-  "$BREW" bundle --global
+  local version
+  version="$(fnm ls-remote | awk 'END { print $1 }')" || true
+  [[ -n $version ]] || die "Couldn't find the latest Node version"
+  info "Installing Node $version"
+  fnm list | grep -qwF "$version" || fnm install "$version"
+  fnm default "$version"
+}
+
+# clone_or_pull <repo> <dir>
+clone_or_pull() {
+  if [[ -d "$2/.git" ]]; then
+    git -C "$2" pull --ff-only --quiet
+  else
+    git clone --quiet "$1" "$2"
+  fi
+}
+
+install_ruby() {
+  info "Installing or updating rbenv and ruby-build"
+  clone_or_pull https://github.com/rbenv/rbenv.git "$RBENV_ROOT"
+  clone_or_pull https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
+
+  # The list also has JRuby, TruffleRuby etc.; keep only CRuby releases.
+  local version
+  version="$(rbenv install --list 2>/dev/null \
+    | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | tail -n 1)" || true
+  [[ -n $version ]] || die "Couldn't find the latest Ruby version"
+  info "Installing Ruby $version"
+  rbenv install --skip-existing "$version"
+  rbenv global "$version"
+}
+
+install_toolchains() {
+  local cmd
+  for cmd in curl git; do
+    command -v "$cmd" >/dev/null || die "$cmd is required to install the toolchains"
+  done
+  os_check_toolchain_deps
+
+  export PATH="$CARGO_BIN:$LOCAL_BIN:$RBENV_ROOT/bin:$PATH"
+  export RBENV_ROOT
+  install_rust
+  install_python
+  install_node
+  install_ruby
 }
 
 main() {
-  detect_os
+  load_os
   parse_args "$@"
 
-  local package
-  for package in "${selected[@]}"; do
-    link_package "$package"
+  local target
+  for target in "${selected[@]}"; do
+    [[ $target == toolchains ]] || link_package "$target"
   done
 
   # Keep ~/.ssh, and the private keys in it, unreadable by other users.
@@ -161,8 +236,10 @@ main() {
     chmod 700 "$HOME/.ssh"
   fi
 
-  if contains brew "${selected[@]}"; then
-    install_brew_packages
+  os_install
+
+  if contains toolchains "${selected[@]}"; then
+    install_toolchains
   fi
 
   if [[ -d "$BACKUP_DIR" ]]; then

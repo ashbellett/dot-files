@@ -7,6 +7,15 @@ setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt SHARE_HISTORY
 
+# Toolchains (installed by install.sh):
+# rustup puts Rust in ~/.cargo/bin, uv and fnm live in ~/.local/bin (uv also
+# links python and python3 there), and rbenv lives in ~/.rbenv. Set up before
+# compinit so their completions are picked up.
+typeset -U path
+path=("$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/.rbenv/bin" $path)
+(( $+commands[fnm] )) && eval "$(fnm env --use-on-cd --shell zsh)"
+(( $+commands[rbenv] )) && eval "$(rbenv init - zsh)"
+
 # Completions:
 autoload -Uz compinit
 compinit
@@ -43,7 +52,6 @@ brew-sync() {
 
 # Aliases:
 alias b=brew-sync
-alias python=python3
 
 # Machine-specific overrides (not tracked):
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

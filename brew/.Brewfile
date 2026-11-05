@@ -4,14 +4,13 @@
 # brew bundle --global
 
 # Formulae:
-# brew "gcc"
 brew "git"
 brew "gh"
-brew "node"
-brew "python"
-brew "ruby"
+brew "libyaml"
+brew "openssl"
 
 # Casks:
 cask "claude"
+cask "docker"
 cask "google-chrome"
 cask "spotify"
