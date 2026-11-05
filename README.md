@@ -28,11 +28,19 @@ The installer:
 3. If the `brew` package is selected, installs Homebrew if it's missing, then
    everything in the Brewfile (`brew bundle --global`). This package is
    macOS-only: on Linux it's skipped, and naming it is an error.
+4. Installs or updates the language toolchains and the latest version of each:
+   Rust (rustup), Python (uv), Node (fnm) and Ruby (rbenv). `~/.zshrc` puts
+   them on the `PATH`. On Linux, install a C toolchain and Ruby's build
+   dependencies first; the installer says which ones are missing.
 
-Re-running it is safe: files that are already linked are left alone.
+Re-running it is safe: files that are already linked are left alone, and the
+toolchains are updated to the latest versions.
 
-To install only some packages (for example, everything except `brew`), name
-them:
+`install.sh` holds the shared steps; `install-macos.sh` and `install-linux.sh`
+hold the OS-specific ones.
+
+To install only some targets (for example, everything except `brew` and the
+toolchains), name them:
 
 ```sh
 ./install.sh claude git ssh zsh

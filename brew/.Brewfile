@@ -4,14 +4,15 @@
 # brew bundle --global
 
 # Formulae:
-# brew "gcc"
 brew "git"
 brew "gh"
-brew "node"
-brew "python"
-brew "ruby"
+
+# Libraries Ruby builds against (Ruby itself comes from rbenv via install.sh):
+brew "libyaml"
+brew "openssl@3"
 
 # Casks:
 cask "claude"
+cask "docker"
 cask "google-chrome"
 cask "spotify"
