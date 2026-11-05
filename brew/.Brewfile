@@ -9,7 +9,7 @@ brew "gh"
 
 # Libraries Ruby builds against (Ruby itself comes from rbenv via install.sh):
 brew "libyaml"
-brew "openssl@3"
+brew "openssl"
 
 # Casks:
 cask "claude"
