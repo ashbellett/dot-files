@@ -11,6 +11,6 @@ brew "openssl"
 
 # Casks:
 cask "claude"
-cask "docker"
+cask "docker-desktop"
 cask "google-chrome"
 cask "spotify"
