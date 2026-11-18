@@ -4,11 +4,11 @@
 # brew bundle --global
 
 # Formulae:
-brew "git"
+brew "ffmpeg"
 brew "gh"
+brew "git"
 brew "libyaml"
 brew "openssl"
-brew "ffmpeg"
 brew "rclone"
 
 # Casks:
