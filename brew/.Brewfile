@@ -8,6 +8,8 @@ brew "git"
 brew "gh"
 brew "libyaml"
 brew "openssl"
+brew "ffmpeg"
+brew "rclone"
 
 # Casks:
 cask "claude"
