@@ -12,6 +12,7 @@ brew "openssl"
 brew "rclone"
 
 # Casks:
+cash "blender"
 cask "claude"
 cask "docker-desktop"
 cask "google-chrome"
